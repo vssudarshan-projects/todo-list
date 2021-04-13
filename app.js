@@ -18,6 +18,7 @@ const app = express();
 app.use(express.static(PUBLIC_PATH));
 app.set("view engine", "ejs");
 app.use(bodyParser.json());
+app.set('trust proxy', 1)
 
 /*GET request on page load*/
 app.get("/", (req, res) => {
@@ -45,7 +46,7 @@ app.get("/", (req, res) => {
 }else {
     token = session.generateToken();
     res.clearCookie('token');
-    res.cookie('token', token, {maxAge: 60*60*24*1000, httpOnly:true ,secure:true});
+    res.cookie('token', token, {maxAge: 60*60*24*1000, httpOnly:true, secure:true});
 }
 
   res.render("index", {
