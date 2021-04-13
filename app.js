@@ -45,7 +45,7 @@ app.get("/", (req, res) => {
 }else {
     token = session.generateToken();
     res.clearCookie('token');
-    res.cookie('token', token, {maxAge: 60*60*24*1000});
+    res.cookie('token', token, {maxAge: 60*60*24*1000, httpOnly:true ,secure:true});
 }
 
   res.render("index", {
