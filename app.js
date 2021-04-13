@@ -18,7 +18,7 @@ const app = express();
 app.use(express.static(PUBLIC_PATH));
 app.set("view engine", "ejs");
 app.use(bodyParser.json());
-app.set('trust proxy', 1)
+app.enable('trust proxy');
 
 /*GET request on page load*/
 app.get("/", (req, res) => {
