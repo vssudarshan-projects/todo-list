@@ -1,0 +1,3 @@
+Convert the lists array to a splay tree.
+Rename, delete lists
+AJAX error handling and other error handling

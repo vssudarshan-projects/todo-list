@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./index.css">
+  <title>To Do List</title>
+</head>
+
+<body>
+  <header>
+    <h1 class="heading">To Do List</h1>
+  </header>
+
+  <div class="container w-100 h-100">
+    <div class="badge-wrapper row">
+      <h1><span class="badge date"><%= day %></span></h1>
+    </div>
+
+    <div class="row">
+<div class="nav-wrapper col-sm-2 col-12">
+    <ul class="nav nav-pills flex-column">
+      <%listInfo.forEach(info => {%>
+        <%if(info.id === Number(id)) var active = 'active'%>
+      <li class="nav-item dropdown">
+        <a id="list-<%= info.id %>" class="list nav-link dropdown-toggle <%=active%>" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><%= info.name %></a>
+        <div id="dropdown-<%= info.id %>" class="dropdown-menu">
+          <a class="dropdown-option option-go dropdown-item" href="#">Go to</a>
+          <a class="dropdown-option option-rename dropdown-item" href="#">Rename</a>
+          <a class="dropdown-option option-delete dropdown-item" href="#">Delete</a>
+        </div>
+      </li>
+      <%});%>
+      <li class="nav-item">
+        <a id="new-list" class="nav-link" href="#">+</a>
+      </li>
+    </ul>
+    </div>
+<div class="list-wrapper  col-sm-10 col-12">
+    <form class="row">
+      <input type="text" id="new-item-text" class="col-9 input-group-text" name="new-item-text" placeholder="Jack and Jill fetch a pail of water." value="">
+      <button type="submit" id="add-item-btn" class="col-3 btn btn-success">Add Item</button>
+    </form>
+    <div class="row" role="group" aria-label="Large button group">
+      <button type="button" id="btn-l" class="col btn-filter btn btn-outline-dark btn-active" value="l">All</button>
+      <button type="button" id="btn-m" class="col btn-filter btn btn-outline-dark" value="m">Pending</button>
+      <button type="button" id="btn-r" class="col btn-filter btn btn-outline-dark" value="r">Done</button>
+    </div>
+    <div class="row list-group">
+      <p id="no-item-msg">Nothing to show.</p>
+      <%var node = list%>
+      <% while(node){ %>
+      <!-- -->
+      <button type="button" class="list-item list-group-item list-group-item-action <%= node.item.color %>">
+        <%= node.item.text %>
+      </button>
+      <%node = node.next;}%>
+    </div>
+  </div>
+  </div>
+
+</div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+  <script src="./index.js" charset="utf-8"></script>
+</body>
+
+</html>
