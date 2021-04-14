@@ -27,10 +27,9 @@ app.get("/", (req, res) => {
   req.headers.cookie.split(";").forEach((cookie) => {
     if (cookie.trim().startsWith("token=")) {
       token = cookie.split("=")[1];
-      return;
     }
   });
-console.log(req.headers.cookie);
+logger.log(req.headers.cookie);
   if (token)
   var sessionData = session.getSession(token);
 
@@ -46,7 +45,7 @@ console.log(req.headers.cookie);
 }else {
     token = session.generateToken();
     res.clearCookie('token');
-  //  res.cookie('token', token, {maxAge: 60*60*24*1000, secure:true, httpOnly:true});
+ res.cookie('token', token, {expires: Date.now() + (60*60*24*1000), secure:true, httpOnly:true});
 }
 
   res.render("index", {
