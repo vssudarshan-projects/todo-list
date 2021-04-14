@@ -29,6 +29,7 @@ app.get("/", (req, res) => {
       token = cookie.split("=")[1];
     }
   });
+  logger.log("Cookies")
 logger.log(req.headers.cookie);
   if (token)
   var sessionData = session.getSession(token);
@@ -45,7 +46,7 @@ logger.log(req.headers.cookie);
 }else {
     token = session.generateToken();
     res.clearCookie('token');
- res.cookie('token', token, {expires: Date.now() + (60*60*24*1000), secure:true, httpOnly:true});
+ res.cookie('token', token, {sameSite: true, maxAge:(60*60*24*1000) , secure:true, httpOnly:true});
 }
 
   res.render("index", {
