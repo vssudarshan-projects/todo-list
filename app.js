@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const list = require("./list.js");
 const session = require("./session");
 const logger = require("./logger.js");
-const tree = require('./tree.js');
+const tree = require("./tree.js");
 
 /*Environment variable*/
 const PORT = process.env.PORT || 3000;
@@ -19,35 +19,43 @@ app.use(express.static(PUBLIC_PATH));
 app.set("view engine", "ejs");
 app.use(bodyParser.json());
 
+function checkCookie(cookies) {
+  let token;
+  if (cookies) {
+    let cArray = cookies.split(";");
+    for (let i = 0; i < cArray.length; i++)
+      if (cArray[i].trim().startsWith("token=")) {
+        token = cArray[i].split("=")[1];
+        break;
+      }
+  }
+  return token;
+}
 
 /*GET request on page load*/
 app.get("/", (req, res) => {
-  var token;
-  if(req.headers.cookie)
-  req.headers.cookie.split(";").forEach((cookie) => {
-    if (cookie.trim().startsWith("token=")) {
-      token = cookie.split("=")[1];
-    }
-  });
-  logger.log("Cookies")
-logger.log(req.headers.cookie);
-  if (token)
-  var sessionData = session.getSession(token);
+  var token = checkCookie(req.headers.cookie);
 
-  var listInfo = [{id:0, name:"untitled"}];
+  if (token) var sessionData = session.getSession(token);
+
+  var listInfo = [{ id: 0, name: "untitled" }];
   var list = null;
   var id = listInfo[0].id;
 
-  if(sessionData){
-  list = sessionData.lists.current().list.get();
-  id = sessionData.lists.current().id;
+  if (sessionData) {
+    list = sessionData.lists.current().list.get();
+    id = sessionData.lists.current().id;
 
-  listInfo = sessionData.lists.getInfo();
-}else {
+    listInfo = sessionData.lists.getInfo();
+  } else {
     token = session.generateToken();
-    res.clearCookie('token');
- res.cookie('token', token, {maxAge:(60*60*24*1000) , secure:true, httpOnly:true});
-}
+    res.clearCookie("token");
+    res.cookie("token", token, {
+      maxAge: 60 * 60 * 24 * 1000,
+      secure: true,
+      httpOnly: true,
+    });
+  }
 
   res.render("index", {
     list: list,
@@ -63,124 +71,132 @@ logger.log(req.headers.cookie);
 
 /*POST request on form submit*/
 app.post("/add-item", (req, res) => {
-  if (!req.body.token) {
-    logger.log("No token available (@" + req.body.token + ")");
+
+    var token = checkCookie(req.headers.cookie);
+
+  if (!token) {
+    logger.log("No token available (@" + token + ")");
     res.send("Invalid Token. Access Denied.");
     return;
   }
 
   var sessionData = {
-    token: req.body.token,
-    lists: null
+    token: token,
+    lists: null,
   };
 
-
-  if (!session.isSession(req.body.token)) {
-    let listData = { id: Number(req.body.listId), name: req.body.listName, list: null };
-    listData.list = new list.LinkedList(
-      req.body.item.text,
-      req.body.item
-    );
+  if (!session.isSession(token)) {
+    let listData = {
+      id: Number(req.body.listId),
+      name: req.body.listName,
+      list: null,
+    };
+    listData.list = new list.LinkedList(req.body.item.text, req.body.item);
     sessionData.lists = new tree.SplayTree(listData);
     session.addSession(sessionData);
   } else {
-    sessionData = session.getSession(req.body.token);
+    sessionData = session.getSession(token);
     if (!sessionData.lists.current().list.has(req.body.item.text)) {
-      sessionData.lists.current().list.addNode(req.body.item.text, req.body.item);
+      sessionData.lists
+        .current()
+        .list.addNode(req.body.item.text, req.body.item);
     }
   }
 
-  res.send('200');
+  res.send();
 });
 
 /*POST request when list item is clicked*/
 app.post("/update-item", (req, res) => {
-  var sessionData = session.getSession(req.body.token);
+  var token = checkCookie(req.headers.cookie);
+  var sessionData = session.getSession(token);
   var node = sessionData.lists.current().list.getNode(req.body.item.text);
-  if(!node){
-  res.send('406');
-  return;
-}
+  if (!node) {
+    res.send("406");
+    return;
+  }
   node.item = req.body.item; //update item
   if (req.body.item.color === "list-group-item-light") {
     sessionData.lists.current().list.moveNode(node, false); //move to bottom
   } else {
     sessionData.lists.current().list.moveNode(node, true); //move to top
   }
-  res.send('200');
+  res.send();
 });
 
 /*POST request when list item is deleted*/
 app.post("/delete-item", (req, res) => {
-  var sessionData = session.getSession(req.body.token);
+  var token = checkCookie(req.headers.cookie);
+  var sessionData = session.getSession(token);
   var node = sessionData.lists.current().list.getNode(req.body.item.text);
-  if(!node){
-  res.send('406');
-  return;
-}
+  if (!node) {
+    res.send();
+    return;
+  }
   sessionData.lists.current().list.deleteNode(node);
-  res.send('200');
+  res.send();
 });
 
 /*POST request for new list */
-app.post('/new-list', (req, res)=>{
-var sessionData = session.getSession(req.body.token);
+app.post("/new-list", (req, res) => {
+  var token = checkCookie(req.headers.cookie);
+  var sessionData = session.getSession(token);
 
-if(!sessionData){
-  res.send('406');
-  return;
-}
-var listData = {
-  id: null,
-  name: req.body.listName,
-  list: new list.LinkedList(null,null)
-}
-sessionData.lists.push(listData);
-res.send('200');
+  if (!sessionData) {
+    res.send("406");
+    return;
+  }
+  var listData = {
+    id: null,
+    name: req.body.listName,
+    list: new list.LinkedList(null, null),
+  };
+  sessionData.lists.push(listData);
+  res.send("200");
 });
 
 /*POST request for new list */
-app.post('/change-list', (req, res)=>{
-var sessionData = session.getSession(req.body.token);
+app.post("/change-list", (req, res) => {
+  var token = checkCookie(req.headers.cookie);
+  var sessionData = session.getSession(token);
 
-if(!sessionData){
-  res.send('406');
-  return;
-}
-sessionData.lists.get(Number(req.body.listId));
-res.send('200');
+  if (!sessionData) {
+    res.send("406");
+    return;
+  }
+  sessionData.lists.get(Number(req.body.listId));
+  res.send("200");
 });
 
 /*POST request for renaming list*/
-app.post('/rename-list', (req, res)=>{
-var sessionData = session.getSession(req.body.token);
+app.post("/rename-list", (req, res) => {
+  var token = checkCookie(req.headers.cookie);
+  var sessionData = session.getSession(token);
 
-if(!sessionData){
-  res.send('406');
-  return;
-}
+  if (!sessionData) {
+    res.send("406");
+    return;
+  }
 
- let listData = sessionData.lists.get(Number(req.body.listId))
+  let listData = sessionData.lists.get(Number(req.body.listId));
 
-if(listData)
-listData.name = req.body.listName;
+  if (listData) listData.name = req.body.listName;
 
-res.send('200');
+  res.send("200");
 });
 
 /*POST request for deleting the list*/
-app.post('/delete-list', (req, res)=>{
-var sessionData = session.getSession(req.body.token);
+app.post("/delete-list", (req, res) => {
+  var token = checkCookie(req.headers.cookie);
+  var sessionData = session.getSession(token);
 
-if(!sessionData){
-  res.send('406');
-  return;
-}
+  if (!sessionData) {
+    res.send("406");
+    return;
+  }
 
-if(sessionData.lists.delete(Number(req.body.listId)))
-res.send('200');
-else
-res.send('406');
+  if (sessionData.lists.delete(Number(req.body.listId))) res.send("200");
+  else res.send("406");
 });
 
 app.listen(PORT, () => {

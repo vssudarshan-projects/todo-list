@@ -1,16 +1,8 @@
 $(document).ready(() => {
-  var token;
+
   var listName = $(".list.active").text().trim();
   var listId = $(".list.active").attr("id").split("-")[1];
 
-  let cookies = document.cookie.split(";");
-
-  for (let i = 0; i < cookies.length; i++)
-    if (cookies[i].trim().startsWith("token=")) {
-      token = cookies[i].trim().split("=")[1];
-      break;
-    }
-console.log(document.cookie);
   //colour for the list items
   var listItemClasses = [
     "list-group-item-danger",
@@ -114,7 +106,7 @@ console.log(document.cookie);
       }
     ).done(status=>{
       if(status === '406')
-      alert("There was an error.");
+        alert("Cannot perform operation.");
     }).fail((err)=>{
       console.log(err);
     }).catch((err)=>{
@@ -146,7 +138,7 @@ console.log(document.cookie);
       }
     ).done(status=>{
       if(status === '406')
-      alert("There was an error.");
+      alert("Cannot perform operation.");
     }).fail((err)=>{
       console.log(err);
     }).catch((err)=>{
@@ -201,7 +193,8 @@ console.log(document.cookie);
       null
     ).done((status) => {
       if (status === "406")
-        alert("Cannot create a new list without creating the first list.");
+          alert("Cannot perform operation.");
+        else
       location.reload(true);
     }).fail((err)=>{
       console.log(err);
@@ -247,8 +240,9 @@ function listReq(list, url){
     },
     null
   ).done((status) => {
-    if (status === "406")
-      alert("There was an error.");
+    if (status === "406"){
+        alert("Cannot perform operation.");
+    }else
     location.reload(true);
   }).fail((err)=>{
     console.log(err);
@@ -263,7 +257,6 @@ function listReq(list, url){
       method: method,
       contentType: "application/json",
       data: JSON.stringify({
-        token: token,
         listName: listData.listName,
         listId: listData.listId,
         item: item,
