@@ -10,7 +10,7 @@ $(document).ready(() => {
       token = cookies[i].trim().split("=")[1];
       break;
     }
-
+console.log(document.cookie);
   //colour for the list items
   var listItemClasses = [
     "list-group-item-danger",
@@ -112,7 +112,14 @@ $(document).ready(() => {
         text: $(this).text().trim(),
         color: color,
       }
-    );
+    ).done(status=>{
+      if(status === '406')
+      alert("There was an error.");
+    }).fail((err)=>{
+      console.log(err);
+    }).catch((err)=>{
+      console.log(err);
+    });
 
     //hide/show based on current filter
     if (
@@ -137,7 +144,14 @@ $(document).ready(() => {
       {
         text: $(item).text().trim(),
       }
-    );
+    ).done(status=>{
+      if(status === '406')
+      alert("There was an error.");
+    }).fail((err)=>{
+      console.log(err);
+    }).catch((err)=>{
+      console.log(err);
+    });
     if ($(".list-item").length === 0) $("#no-item-msg").show();
   }
 
@@ -158,6 +172,10 @@ $(document).ready(() => {
       }
     ).done(() => {
       location.reload(true);
+    }).fail((err)=>{
+      console.log(err);
+    }).catch((err)=>{
+      console.log(err);
     });
   });
 
@@ -185,6 +203,10 @@ $(document).ready(() => {
       if (status === "406")
         alert("Cannot create a new list without creating the first list.");
       location.reload(true);
+    }).fail((err)=>{
+      console.log(err);
+    }).catch((err)=>{
+      console.log(err);
     });
   });
 
@@ -228,6 +250,10 @@ function listReq(list, url){
     if (status === "406")
       alert("There was an error.");
     location.reload(true);
+  }).fail((err)=>{
+    console.log(err);
+  }).catch((err)=>{
+    console.log(err);
   });
 }
 
