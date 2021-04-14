@@ -13,4 +13,4 @@ The website uses,
 4. I have implemented a LinkedList and a Splay Tree to store the list items and lists respectively.
 5. Cookies are used to manage the session. Though, they will reset after 24 hours of first launching th website.
 
-Live at: http://todo-list-ds.herokuapp.com/
+Live at: https://todo-list-ds.herokuapp.com/
