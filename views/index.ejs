@@ -20,23 +20,24 @@
     </div>
 
     <div class="flex-row d-flex w-100 justify-content-center">
-      <div class="d-flex btn-group">
-        <button type="button" class="list-btn btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        </button>
-        <div class="list-menu dropdown-menu dropright">
-          <%listInfo.forEach(info => {%>
-          <%if(info.id === Number(id)) var active = 'active'%>
-          <button type="button" id="list-<%= info.id %>" class="list btn dropdown-item dropdown-toggle <%=active%>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= info.name %></button>
-          <%});%>
-          <div class="options-menu dropdown-menu">
-            <a class="dropdown-option option-go dropdown-item" href="#">Go to</a>
-            <a class="dropdown-option option-rename dropdown-item" href="#">Rename</a>
-            <a class="dropdown-option option-delete dropdown-item" href="#">Delete</a>
-          </div>
-          <div class="dropdown-divider"></div>
-          <a id="new-list" class="nav-link" href="#">New List</a>
-        </div>
-      </div>
+      <button type="button" class="list-btn btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        <%listInfo.forEach(info => {%>
+        <%if(info.id === Number(id)) var active = 'active'%>
+        <li class="dropdown-submenu">
+          <a id="list-<%= info.id %>" class="list btn dropdown-item <%=active%>"><%= info.name %></a>
+          <ul class="dropdown-menu">
+            <li class="dropdown-item"><a class="dropdown-option option-rename btn" href="#">Rename</a></li>
+            <li class="dropdown-item"><a class="dropdown-option option-delete btn" href="#">Delete</a></li>
+          </ul>
+        </li>
+        <%});%>
+
+        <div class="dropdown-divider"></div>
+        <a id="new-list" class="dropdown-item" href="#">New List</a>
+      </ul>
+
       <form class="d-flex flex-row w-100">
         <input type="text" id="new-item-text" class="input-group-text w-100" name="new-item-text" placeholder="Jack and Jill fetch a pail of water." value="">
         <button type="submit" id="add-item-btn" class="btn btn-success w-25">Add Item</button>

@@ -207,17 +207,14 @@ $(document).ready(() => {
   $(".dropdown-option").on("pointerdown", function () {
     let className = $(this).attr("class").split(" ")[1];
     switch (className) {
-      case "option-go":
-        listReq('/change-list');
-        break;
       case "option-rename":
         renameList(this);
         break;
       case "option-delete":
-      listReq('/delete-list');
+      listReq($(this).parent().parent().prev(),'/delete-list');
         break;
       default:
-        console.log(className);
+        console.log("Got option " + className);
     }
   });
 
@@ -226,49 +223,16 @@ function renameList(list){
   if (!newListName) return;
   else if (newListName.trim() === "") newListName = "untitled";
 
-  $(list).parent().prev().text(newListName);
-  listReq($(list).parent().prev(), '/rename-list');
+  $(list).parent().parent().prev().text(newListName);
+  listReq($(list).parent().parent().prev(), '/rename-list');
 }
 
 
-// I also found a solution.
-//
-// Assuming that the Twitter Bootstrap Components related events handlers are delegated to the document object, I loop the attached handlers and check if the current clicked element (or one of its parents) is concerned by a delegated event.
-//
-// $('ul.dropdown-menu.mega-dropdown-menu').on('click', function(event){
-//     var events = $._data(document, 'events') || {};
-//     events = events.click || [];
-//     for(var i = 0; i < events.length; i++) {
-//         if(events[i].selector) {
-//
-//             //Check if the clicked element matches the event selector
-//             if($(event.target).is(events[i].selector)) {
-//                 events[i].handler.call(event.target, event);
-//             }
-//
-//             // Check if any of the clicked element parents matches the
-//             // delegated event selector (Emulating propagation)
-//             $(event.target).parents(events[i].selector).each(function(){
-//                 events[i].handler.call(this, event);
-//             });
-//         }
-//     }
-//     event.stopPropagation(); //Always stop propagation
-// });
-// Hope it helps any one looking for a similar solution.
-//
-// Thank you all for your help.
-
-// $('.list-menu').on('pointerdown',function(event){
-//   event.stopPropagation();
-// });
-
-var clickedList;
 $('.list').on('pointerdown', function(){
-clickedList = this;
+    listReq(this, '/change-list');
 });
 
-function listReq(url){
+function listReq(clickedList, url){
   return callAjax(
     url,
     "POST",
