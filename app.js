@@ -103,7 +103,7 @@ app.post("/add-item", (req, res) => {
     }
   }
 
-  res.send();
+  res.send('200');
 });
 
 /*POST request when list item is clicked*/
@@ -121,7 +121,7 @@ app.post("/update-item", (req, res) => {
   } else {
     sessionData.lists.current().list.moveNode(node, true); //move to top
   }
-  res.send();
+  res.send('200');
 });
 
 /*POST request when list item is deleted*/
@@ -130,11 +130,11 @@ app.post("/delete-item", (req, res) => {
   var sessionData = session.getSession(token);
   var node = sessionData.lists.current().list.getNode(req.body.item.text);
   if (!node) {
-    res.send();
+    res.send('406');
     return;
   }
   sessionData.lists.current().list.deleteNode(node);
-  res.send();
+  res.send('200');
 });
 
 /*POST request for new list */
