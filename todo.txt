@@ -1,1 +1,1 @@
-Change list links to a drop down
+change drop down hide behaviour

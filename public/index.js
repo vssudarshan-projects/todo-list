@@ -203,17 +203,18 @@ $(document).ready(() => {
     });
   });
 
+
   $(".dropdown-option").on("pointerdown", function () {
     let className = $(this).attr("class").split(" ")[1];
     switch (className) {
       case "option-go":
-        listReq($(this).parent().prev(), '/change-list');
+        listReq('/change-list');
         break;
       case "option-rename":
         renameList(this);
         break;
       case "option-delete":
-      listReq($(this).parent().prev(), '/delete-list');
+      listReq('/delete-list');
         break;
       default:
         console.log(className);
@@ -230,20 +231,57 @@ function renameList(list){
 }
 
 
-function listReq(list, url){
+// I also found a solution.
+//
+// Assuming that the Twitter Bootstrap Components related events handlers are delegated to the document object, I loop the attached handlers and check if the current clicked element (or one of its parents) is concerned by a delegated event.
+//
+// $('ul.dropdown-menu.mega-dropdown-menu').on('click', function(event){
+//     var events = $._data(document, 'events') || {};
+//     events = events.click || [];
+//     for(var i = 0; i < events.length; i++) {
+//         if(events[i].selector) {
+//
+//             //Check if the clicked element matches the event selector
+//             if($(event.target).is(events[i].selector)) {
+//                 events[i].handler.call(event.target, event);
+//             }
+//
+//             // Check if any of the clicked element parents matches the
+//             // delegated event selector (Emulating propagation)
+//             $(event.target).parents(events[i].selector).each(function(){
+//                 events[i].handler.call(this, event);
+//             });
+//         }
+//     }
+//     event.stopPropagation(); //Always stop propagation
+// });
+// Hope it helps any one looking for a similar solution.
+//
+// Thank you all for your help.
+
+// $('.list-menu').on('pointerdown',function(event){
+//   event.stopPropagation();
+// });
+
+var clickedList;
+$('.list').on('pointerdown', function(){
+clickedList = this;
+});
+
+function listReq(url){
   return callAjax(
     url,
     "POST",
     {
-      listName: $(list).text().trim(),
-      listId: $(list).attr("id").split("-")[1],
+      listName: $(clickedList).text().trim(),
+      listId: $(clickedList).attr("id").split("-")[1],
     },
     null
   ).done((status) => {
     if (status === "406"){
         alert("Cannot perform operation.");
-    }else
-    location.reload(true);
+    }else;
+   location.reload(true);
   }).fail((err)=>{
     console.log(err);
   }).catch((err)=>{
