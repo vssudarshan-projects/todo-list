@@ -3,7 +3,7 @@
 A web program to organise your to do lists. You can perform the following operations:
 1. Add items to a list
 2. Check mark the items
-3. Delete the items
+3. Delete the items (Shift+mouse click)
 4. Add, delete and rename different lists
 
 The website uses,
