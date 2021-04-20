@@ -11,6 +11,6 @@ The website uses,
 2. The back end uses Nodejs and expressjs to handle https requests and routing. 
 3. EJS is used as a templating engine.
 4. I have implemented a LinkedList and a Splay Tree to store the list items and lists respectively.
-5. Cookies are used to manage the session. Though, they will reset after 24 hours of first launching th website.
+5. Cookies are used to manage the session. Though, they will reset after 24 hours of first launching the website.
 
 Live at: https://todo-list-ds.herokuapp.com/
