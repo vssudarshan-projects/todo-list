@@ -2,7 +2,6 @@
 
 exports.SplayTree = class SplayTree {
   #root = null;
-  #idArray = [];
 
   #Node(listData) {
     var node = {
@@ -204,13 +203,7 @@ exports.SplayTree = class SplayTree {
 
   push(listData) {
     if (!listData.id)
-      if (this.#idArray.length !== 0) listData.id = this.#idArray.pop();
-      else {
-        let node = this.#root;
-        while (node.right) node = node.right;
-
-        listData.id = Number(node.listData.id) + 1;
-      }
+        listData.id = Date.now();
     this.#addNode(this.#Node(listData));
   }
 
@@ -234,9 +227,7 @@ exports.SplayTree = class SplayTree {
     let node = this.#getNode(key);
     if (node) {
       let result = this.#deleteNode(node);
-      if (oldRoot !== node) this.#root = this.#splay(oldRoot);
-      else this.#root = result;
-      this.#idArray.push(key);
+      this.#root = result;
       return true;
     }
     return false;

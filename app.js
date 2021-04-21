@@ -38,7 +38,7 @@ app.get("/", (req, res) => {
 
   if (token) var sessionData = session.getSession(token);
 
-  var listInfo = [{ id: 0, name: "untitled" }];
+  var listInfo = [{ id: Date.now(), name: "untitled" }];
   var list = null;
   var id = listInfo[0].id;
 

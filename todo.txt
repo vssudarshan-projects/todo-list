@@ -1,1 +1,1 @@
-change drop down hide behaviour
+Size of each menu item is not uniform

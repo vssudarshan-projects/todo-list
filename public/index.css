@@ -103,6 +103,18 @@ a.btn.active{
   background-color: #b8daff;
 }
 
-.list.btn{
+.list.btn.dropdown-item{
   border-radius: 0;
+  padding: .6rem 1.25rem;
+}
+
+#new-list{
+  padding: .6rem 1.25rem;
+  color: #0c5460;
+}
+
+#new-list:hover{
+  color: #004085;
+  background-color: #9fcdff;
+  cursor: pointer;
 }
